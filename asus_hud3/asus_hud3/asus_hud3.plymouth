@@ -1,0 +1,17 @@
+[Plymouth Theme]
+Name=asus_hud3
+Description=ASUS-theme based on HUD 3 theme by Aditya Shakya (@adi1090x)
+Comment=Edited By Andrei Bykov
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/asus_hud3
+ScriptFile=/usr/share/plymouth/themes/asus_hud3/asus_hud3.script
+
+[boot-up]
+UseEndAnimation=false
+UseFirmwareBackground=true
+
+[shutdown]
+UseEndAnimation=false
+UseFirmwareBackground=true

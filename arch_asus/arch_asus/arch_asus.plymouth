@@ -1,0 +1,17 @@
+[Plymouth Theme]
+Name=arch_asus
+Description=Arch Plymouth Theme with Asus logo
+Comment=created By Andrei A. Bykov (andr31ab)
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/arch_asus
+ScriptFile=/usr/share/plymouth/themes/arch_asus/arch_asus.script
+
+[boot-up]
+UseEndAnimation=false
+UseFirmwareBackground=true
+
+[shutdown]
+UseEndAnimation=false
+UseFirmwareBackground=true

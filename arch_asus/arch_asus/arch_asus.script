@@ -1,0 +1,95 @@
+vendor_x_offset = 736;
+vendor_y_offset = 480;
+
+screen.w = Window.GetWidth();
+screen.h = Window.GetHeight();
+screen.half.w = screen.w / 2;
+
+total_frames = 120;
+anim_size = 300;
+
+vendor_img = Image("vendor_logo.png");
+vendor_sprite = Sprite(vendor_img);
+vendor_sprite.SetZ(5);
+vendor_sprite.SetX(vendor_x_offset);
+vendor_sprite.SetY(vendor_y_offset);
+
+logo_bottom = vendor_y_offset + vendor_img.GetHeight();
+gap_height = screen.h - logo_bottom;
+shift_down = 60;
+target_center_y = logo_bottom + (gap_height * 0.5) + shift_down;
+
+for (i = 0; i < total_frames; i++)
+    sphere_images[i] = Image("progress-" + i + ".png");
+
+sphere_sprite = Sprite();
+sphere_sprite.SetZ(1); 
+sphere_sprite.SetX(screen.half.w - (anim_size / 2));
+sphere_sprite.SetY(target_center_y - (anim_size / 2));
+
+//password's objects
+lock_img = Image("lock.png");
+lock_sprite = Sprite();
+lock_sprite.SetZ(5000); 
+
+bullet_img = Image("bullet.png");
+bullet_sprites = [];
+for (i = 0; i < 64; i++) {
+    bullet_sprites[i] = Sprite();
+    bullet_sprites[i].SetZ(5001);
+    bullet_sprites[i].SetOpacity(0);
+}
+
+global.is_auth = 0;
+global.b_count = 0;
+progress = 0;
+
+fun refresh_callback() {
+    frame_index = Math.Int(progress / 2) % total_frames;
+    sphere_sprite.SetImage(sphere_images[frame_index]);
+    
+    if (global.is_auth) {
+        if (lock_img) {
+            lock_sprite.SetImage(lock_img);
+            
+            lx = screen.half.w - lock_img.GetWidth() / 2;
+            ly = sphere_sprite.GetY() + 200 - lock_img.GetHeight() / 2;
+            
+            lock_sprite.SetPosition(lx, ly, 5000);
+            lock_sprite.SetOpacity(1);
+
+            local.spacing = 24;
+            local.total_w = global.b_count * local.spacing;
+            local.start_x = screen.half.w - local.total_w / 2;
+
+            for (i = 0; i < 64; i++) {
+                if (i < global.b_count && bullet_img) {
+                    bullet_sprites[i].SetImage(bullet_img);
+                    bullet_sprites[i].SetPosition(local.start_x + i * local.spacing - (bullet_img.GetWidth()/2), ly + 13, 5001);
+                    bullet_sprites[i].SetOpacity(1);
+                } else {
+                    bullet_sprites[i].SetOpacity(0);
+                }
+            }
+        }
+    } else {
+        lock_sprite.SetOpacity(0);
+        for (i = 0; i < 64; i++) bullet_sprites[i].SetOpacity(0);
+    }
+    
+    progress++;
+}
+
+Plymouth.SetRefreshFunction(refresh_callback);
+
+fun password_callback(prompt, bullets) {
+    global.is_auth = 1;
+    global.b_count = bullets;
+}
+
+fun normal_callback() {
+    global.is_auth = 0;
+}
+
+Plymouth.SetDisplayPasswordFunction(password_callback);
+Plymouth.SetDisplayNormalFunction(normal_callback);
